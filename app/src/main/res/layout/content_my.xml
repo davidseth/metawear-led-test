@@ -21,7 +21,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Connect 1"
+        android:text="Connect"
         android:id="@+id/connect"
         android:layout_marginTop="240dp"
         android:layout_below="@+id/textView"
@@ -30,18 +30,10 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Connect 2"
-        android:id="@+id/connect2"
-        android:layout_below="@+id/connect"
-        android:layout_centerHorizontal="true" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="LED on"
         android:id="@+id/led_on"
-        android:layout_below="@+id/connect2"
-        android:layout_alignStart="@+id/connect2" />
+        android:layout_below="@+id/connect"
+        android:layout_alignStart="@+id/connect" />
 
     <Button
         android:layout_width="wrap_content"

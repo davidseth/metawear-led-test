@@ -45,9 +45,7 @@ public class MyActivity extends AppCompatActivity implements ServiceConnection {
 
     private MetaWearBleService.LocalBinder serviceBinder;
     private Led ledModule; //Declare the ledModule
-    private Led ledModule2; //Declare the ledModule
-    private MetaWearBoard mwBoard1;
-    private MetaWearBoard mwBoard2;
+    private MetaWearBoard mwBoard;
 
 
 
@@ -67,17 +65,8 @@ public class MyActivity extends AppCompatActivity implements ServiceConnection {
         connect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(TAG, "Clicked connect1");
-                mwBoard1.connect(); //.connect() and .disconnect() are how we control connection state
-            }
-        });
-
-        connect2=(Button)findViewById(R.id.connect2);
-        connect2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG, "Clicked connect2");
-                mwBoard2.connect(); //.connect() and .disconnect() are how we control connection state
+                Log.i(TAG, "Clicked connect");
+                mwBoard.connect(); //.connect() and .disconnect() are how we control connection state
             }
         });
     }
@@ -94,37 +83,34 @@ public class MyActivity extends AppCompatActivity implements ServiceConnection {
     public void onServiceConnected(ComponentName name, IBinder service) {
         ///< Typecast the binder to the service's LocalBinder class
         serviceBinder = (MetaWearBleService.LocalBinder) service;
-        retrieveBoard(MW_MAC_ADDRESS, mwBoard1);
-        //retrieveBoard(MW2_MAC_ADDRESS, mwBoard2);
+        retrieveBoard();
     }
 
     @Override
     public void onServiceDisconnected(ComponentName componentName) { }
 
-    private final ConnectionStateHandler stateHandler = new ConnectionStateHandler() {
+    private final ConnectionStateHandler stateHandler= new ConnectionStateHandler() {
         @Override
         public void connected() {
             Log.i(TAG, "Connected");
             try {
-                ledModule = mwBoard1.getModule(Led.class);
+                ledModule = mwBoard.getModule(Led.class);
             } catch (UnsupportedModuleException e) {
                 e.printStackTrace();
             }
 
-            try {
-                ledModule2 = mwBoard2.getModule(Led.class);
-            } catch (UnsupportedModuleException e) {
-                e.printStackTrace();
-            }
 
             led_on=(Button)findViewById(R.id.led_on);
             led_on.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Log.i(TAG, "Turn on LED");
-                    setBoardColour(ledModule);
-                    //setBoardColour(ledModule2);
-
+                    ledModule.configureColorChannel(Led.ColorChannel.BLUE)
+                            .setRiseTime((short) 0).setPulseDuration((short) 1000)
+                            .setRepeatCount((byte) -1).setHighTime((short) 500)
+                            .setHighIntensity((byte) 16).setLowIntensity((byte) 16)
+                            .commit();
+                    ledModule.play(true);
                 }
             });
 
@@ -134,7 +120,6 @@ public class MyActivity extends AppCompatActivity implements ServiceConnection {
                 public void onClick(View v) {
                     Log.i(TAG, "Turn off LED");
                     ledModule.stop(true);
-                    //ledModule2.stop(true);
                 }
             });
         }
@@ -150,23 +135,15 @@ public class MyActivity extends AppCompatActivity implements ServiceConnection {
         }
     };
 
-    public void setBoardColour(Led ledModule) {
-        ledModule.configureColorChannel(Led.ColorChannel.BLUE)
-                .setRiseTime((short) 0).setPulseDuration((short) 1000)
-                .setRepeatCount((byte) -1).setHighTime((short) 500)
-                .setHighIntensity((byte) 16).setLowIntensity((byte) 16)
-                .commit();
-        ledModule.play(true);
-    }
-
-    public void retrieveBoard(String macaddress, MetaWearBoard board) {
-        final BluetoothManager btManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-        final BluetoothDevice remoteDevice = btManager.getAdapter().getRemoteDevice(macaddress);
+    public void retrieveBoard() {
+        final BluetoothManager btManager=
+                (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        final BluetoothDevice remoteDevice =
+                btManager.getAdapter().getRemoteDevice(MW_MAC_ADDRESS);
 
         // Create a MetaWear board object for the Bluetooth Device
-        mwBoard1 = serviceBinder.getMetaWearBoard(remoteDevice);
-        Log.i(TAG, "retrieveBoard");
-        mwBoard1.setConnectionStateHandler(stateHandler);
+        mwBoard= serviceBinder.getMetaWearBoard(remoteDevice);
+        mwBoard.setConnectionStateHandler(stateHandler);
     }
 
 }

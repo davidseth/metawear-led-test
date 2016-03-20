@@ -38,8 +38,24 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="LED off"
-        android:id="@+id/led_off"
+        android:text="LED 2 on"
+        android:id="@+id/led2_on"
         android:layout_below="@+id/led_on"
         android:layout_alignStart="@+id/led_on" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="LED off"
+        android:id="@+id/led_off"
+        android:layout_below="@+id/led2_on"
+        android:layout_alignStart="@+id/led2_on" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="LED 2 off"
+        android:id="@+id/led2_off"
+        android:layout_below="@+id/led_off"
+        android:layout_alignStart="@+id/led_off" />
 </RelativeLayout>

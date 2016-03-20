@@ -37,7 +37,9 @@ public class MyActivity extends AppCompatActivity implements ServiceConnection {
     public Button connect;
     public TextView textView;
     private Button led_on;
+    private Button led2_on;
     private Button led_off;
+    private Button led2_off;
 
     private final String MW_MAC_ADDRESS= "E8:79:FE:30:7C:44"; //update with your board's MAC address
     private final String MW2_MAC_ADDRESS= "E3:A6:6C:ED:CE:11"; //update with your board's MAC address
@@ -159,8 +161,8 @@ public class MyActivity extends AppCompatActivity implements ServiceConnection {
             }
 
 
-            led_on=(Button)findViewById(R.id.led_on);
-            led_on.setOnClickListener(new View.OnClickListener() {
+            led2_on=(Button)findViewById(R.id.led2_on);
+            led2_on.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Log.i(TAG, "Turn on LED 2");
@@ -173,8 +175,8 @@ public class MyActivity extends AppCompatActivity implements ServiceConnection {
                 }
             });
 
-            led_off=(Button)findViewById(R.id.led_off);
-            led_off.setOnClickListener(new View.OnClickListener() {
+            led2_off=(Button)findViewById(R.id.led2_off);
+            led2_off.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Log.i(TAG, "Turn off LED 2" );
